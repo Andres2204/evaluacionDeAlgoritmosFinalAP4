@@ -1,5 +1,7 @@
 package SortingAlgorithms;
 
+import terminalUtils.ProgressBar;
+
 public class SortingAlgorthmsVector {
 
 
@@ -7,7 +9,7 @@ public class SortingAlgorthmsVector {
         BUBBLE SORT
     */
 
-    public static void bubbleSort(int arr[], int n) { // vercion optimizada
+    public static void bubbleSort(int[] arr, int n, ProgressBar pb) { // vercion optimizada
         int i, j, temp;
         boolean swapped;
         for (i = 0; i < n - 1; i++) {
@@ -22,13 +24,14 @@ public class SortingAlgorthmsVector {
                     swapped = true;
                 }
             }
+            pb.updateProgress(i+1, n); // update progress
 
             // If no two elements were
             // swapped by inner loop, then break
-            if (swapped == false)
+            if (!swapped)
                 break;
         }
-
+        pb.setSortingComplete(true); // finish progress
     }
 
 
