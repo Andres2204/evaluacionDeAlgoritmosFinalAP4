@@ -1,5 +1,7 @@
 package SortingAlgorithms;
 
+import terminalUtils.ProgressBar;
+
 import java.util.ArrayList;
 
 public class SortingAlgorithmsArrayList {
@@ -8,7 +10,7 @@ public class SortingAlgorithmsArrayList {
         BUBBLE SORT
     */
 
-    public static void bubbleSort(ArrayList<Integer> arr, int n) { // vercion optimizada
+    public static void bubbleSort(ArrayList<Integer> arr, int n, ProgressBar pb) { // vercion optimizada
         int i, j, temp;
         boolean swapped;
         for (i = 0; i < n - 1; i++) {
@@ -37,7 +39,7 @@ public class SortingAlgorithmsArrayList {
         Ordenamiento por inserción:
     */
 
-    public static void insertionSort(ArrayList<Integer> arr) {
+    public static void insertionSort(ArrayList<Integer> arr, ProgressBar pb) {
         int j, aux;
 
         for (int i = 1; i < 100; i++) {          // ¡Ojo! Empezamos en 1
@@ -73,8 +75,10 @@ public class SortingAlgorithmsArrayList {
     // arr[] --> Array to be sorted,
     // low --> Starting index,
     // high --> Ending index
-    static void quickSort(ArrayList<Integer> arr, int low, int high)
-    {
+    static void quickSort(ArrayList<Integer> arr, int n, ProgressBar pb) {
+        quickSort(arr, 0, n-1, pb);
+    }
+    static void quickSort(ArrayList<Integer> arr, int low, int high, ProgressBar pb) {
         if (low < high) {
 
             // pi is partitioning index, arr[p]
@@ -83,8 +87,8 @@ public class SortingAlgorithmsArrayList {
 
             // Separately sort elements before
             // partition and after partition
-            quickSort(arr, low, pi - 1);
-            quickSort(arr, pi + 1, high);
+            quickSort(arr, low, pi - 1, pb);
+            quickSort(arr, pi + 1, high, pb);
         }
     }
 
@@ -126,8 +130,7 @@ public class SortingAlgorithmsArrayList {
         heap sort.
     */
 
-    public void heapSort(ArrayList<Integer> arr)
-    {
+    public void heapSort(ArrayList<Integer> arr, ProgressBar pb) {
         int N = arr.size();
 
         // Build heap (rearrange array)

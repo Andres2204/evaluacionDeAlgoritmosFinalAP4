@@ -2,7 +2,7 @@ package SortingAlgorithms;
 
 import terminalUtils.ProgressBar;
 
-public class SortingAlgorthmsVector {
+public class SortingAlgorithmsVector {
 
 
     /*
@@ -39,7 +39,7 @@ public class SortingAlgorthmsVector {
         Ordenamiento por inserción:
     */
 
-    public static void insertionSort(int[] arr) {
+    public static void insertionSort(int[] arr, int n, ProgressBar pb) {
         int j, aux;
 
         for (int i = 1; i < 100; i++) {          // ¡Ojo! Empezamos en 1
@@ -51,9 +51,9 @@ public class SortingAlgorthmsVector {
 
             arr[j + 1] = aux;                    // Ponemos el valor a ordenar en su sitio.
 
-            // updates progressbar
+            pb.updateProgress(i+1, n); // update progress
         }
-        //end progressbar
+        pb.setSortingComplete(true); // finish progress
 
     }
 
@@ -75,8 +75,11 @@ public class SortingAlgorthmsVector {
     // arr[] --> Array to be sorted,
     // low --> Starting index,
     // high --> Ending index
-    static void quickSort(int[] arr, int low, int high)
-    {
+    static void quickSort(int[] arr, int n, ProgressBar pb) {
+        quickSort(arr, 1, n-1, pb);
+        pb.setSortingComplete(true);
+    }
+    static void quickSort(int[] arr, int low, int high, ProgressBar pb)  {
         if (low < high) {
 
             // pi is partitioning index, arr[p]
@@ -85,8 +88,9 @@ public class SortingAlgorthmsVector {
 
             // Separately sort elements before
             // partition and after partition
-            quickSort(arr, low, pi - 1);
-            quickSort(arr, pi + 1, high);
+            quickSort(arr, low, pi - 1, pb);
+            quickSort(arr, pi + 1, high, pb);
+            pb.updateProgress(pi, high-1);
         }
     }
 
@@ -122,14 +126,11 @@ public class SortingAlgorthmsVector {
         arr[j] = temp;
     }
 
-
-
     /*
         heap sort.
     */
 
-    public void heapSort(int[] arr)
-    {
+    public static void heapSort(int[] arr, ProgressBar pb) {
         int N = arr.length;
 
         // Build heap (rearrange array)
@@ -145,13 +146,14 @@ public class SortingAlgorthmsVector {
 
             // call max heapify on the reduced heap
             heapify(arr, i, 0);
+            pb.updateProgress(i, N);
         }
+        pb.setSortingComplete(true);
     }
 
     // To heapify a subtree rooted with node i which is
     // an index in arr[]. n is size of heap
-    void heapify(int[] arr, int N, int i)
-    {
+    private static void heapify(int[] arr, int N, int i)  {
         int largest = i; // Initialize largest as root
         int l = 2 * i + 1; // left = 2*i + 1
         int r = 2 * i + 2; // right = 2*i + 2
