@@ -22,6 +22,7 @@ public class SortingTest {
 
     // VEC THREADS
 
+    /*
     public Thread bubbleVecThread = new Thread(() -> {
 
     });
@@ -56,30 +57,18 @@ public class SortingTest {
 
     });
 
+    */
+
     public SortingTest(boolean useVec, int n, boolean seq) {
 
+        // progressThreads creation
         for (int i = 0; i < 4; i++) {
             progressThreads[i] = new ProgressBar();
         }
 
+        // generate vector or arrayList
         if (useVec) {
             this.vec = generateVector(n);
-            bubbleVecThread = new Thread(() -> {
-
-            });
-
-            insertionVecThread = new Thread(() -> {
-
-            });
-
-            quickVecThread = new Thread(() -> {
-
-            });
-
-            heapVecThread = new Thread(() -> {
-
-            });
-
         } else {
             this.arr = generateArrayList(n);
         }
@@ -103,20 +92,15 @@ public class SortingTest {
         */
 
         Thread progressBarThread;
+        Thread[] sortThread = initializeThreads();
         if (seq) {
-            for (int i = 0; i < 4; i++) {
-                for (int j = 0; j <4; j++) {
-                    progressThreads[i].setProgress(0);
-                }
-                Thread st = initializeThreads()[i]; // ACTUALIZAR POR AQUI
-
-                ProgressBar pb = progressThreads[0];
-
+            for (int i = 0; i < 4; i++) { // number of threads
+                ProgressBar pb = progressThreads[i];
                 progressBarThread = new Thread(() -> {
                     while (!pb.isSortingComplete()) {
                         printProgressBar(pb.getProgress(), pb.getTotalSteps(), true);
                         try {
-                            Thread.sleep(500);
+                            Thread.sleep(200);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
@@ -124,88 +108,79 @@ public class SortingTest {
                     printProgressBar(pb.getTotalSteps(), pb.getTotalSteps(), false);
                 });
 
-                launch(st, progressBarThread);
+                launch(sortThread[i], progressBarThread);
             }
 
         } else {
-            Thread[] sortingThreads = initializeThreads();
             progressBarThread = new Thread(() -> {
                 boolean sortingComplete = false;
-                int totalSteps = 0;
-                for(ProgressBar pb : progressThreads) {
-                    totalSteps += pb.getProgress();
-                }
-                totalSteps /= 4; // number of algorithms
+                int totalSteps = 100; // setting to 100 for uniformity
 
-                int progress = totalSteps;
                 while (!sortingComplete) {
-                    progress = 1;
+                    int progress = 0;
 
-                    // media progress;
-                    for(ProgressBar pb : progressThreads) {
+                    for (ProgressBar pb : progressThreads) {
                         progress += pb.getProgress();
                     }
                     progress /= 4; // number of algorithms
 
-                    // confirm complete all;
-                    for(ProgressBar pb : progressThreads) {
+                    sortingComplete = true;
+                    for (ProgressBar pb : progressThreads) {
                         if (!pb.isSortingComplete()) {
                             sortingComplete = false;
                             break;
                         }
-                        sortingComplete = true;
                     }
 
                     printProgressBar(progress, totalSteps, true);
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(200);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
                 }
-                printProgressBar(1, 1, false);
+                printProgressBar(100, 100, false);
             });
 
-
-            launchMultiple(sortingThreads, progressBarThread);
+            launchMultiple(sortThread, progressBarThread);
         }
 
     }
 
     private Thread[] initializeThreads() {
-        Thread[] sortingThreads = new Thread[4]; // number of threads
+        Thread[] sortingThreads = new Thread[4]; // number of threads // <--------- CAMBIO
         if (vector) {
             sortingThreads[0] = new Thread(() -> {
-                SortingAlgorithmsVector.bubbleSort(generateVector(n), n, progressThreads[0]);
+                SortingAlgorithmsVector.bubbleSort(this.vec.clone(), n, progressThreads[0]);
             });
 
             sortingThreads[1] = new Thread(() -> {
-                SortingAlgorithmsVector.insertionSort(generateVector(n), n, seq ? progressThreads[0] : progressThreads[1]);
+                SortingAlgorithmsVector.insertionSort(this.vec.clone(), n, progressThreads[1]);
             });
 
             sortingThreads[2] = new Thread(() -> {
-                SortingAlgorithmsVector.quickSort(generateVector(n), n, seq ? progressThreads[0] : progressThreads[2]);
+                SortingAlgorithmsVector.quickSort(this.vec.clone(), n, progressThreads[2]);
             });
 
             sortingThreads[3] = new Thread(() -> {
-                SortingAlgorithmsVector.heapSort(generateVector(n), seq ? progressThreads[0] : progressThreads[3]);
+                SortingAlgorithmsVector.heapSort(this.vec.clone(), progressThreads[3]);
             });
 
-        } else { // TODO: ACTUALIZAR METODOS PARA LA BARRA DE PROGRESO
+        } else {
             sortingThreads[0] = new Thread(() -> {
                 SortingAlgorithmsArrayList.bubbleSort(generateArrayList(n), n, progressThreads[0]);
             });
 
             sortingThreads[1] = new Thread(() -> {
-                SortingAlgorithmsArrayList.bubbleSort(generateArrayList(n), n, seq ? progressThreads[0] : progressThreads[1]);
+                SortingAlgorithmsArrayList.insertionSort(generateArrayList(n), progressThreads[1]);
             });
 
             sortingThreads[2] = new Thread(() -> {
-                SortingAlgorithmsArrayList.bubbleSort(generateArrayList(n), n, seq ? progressThreads[0] : progressThreads[2]);
+                SortingAlgorithmsArrayList.quickSort(generateArrayList(n), n, progressThreads[2]);
             });
 
             sortingThreads[3] = new Thread(() -> {
-                SortingAlgorithmsArrayList.bubbleSort(generateArrayList(n), n, seq ? progressThreads[0] : progressThreads[3]);
+                SortingAlgorithmsArrayList.heapSort(generateArrayList(n), progressThreads[3]);
             });
         }
         return sortingThreads;

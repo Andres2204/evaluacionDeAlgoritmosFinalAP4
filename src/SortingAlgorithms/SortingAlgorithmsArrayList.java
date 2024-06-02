@@ -130,7 +130,7 @@ public class SortingAlgorithmsArrayList {
         heap sort.
     */
 
-    public void heapSort(ArrayList<Integer> arr, ProgressBar pb) {
+    public static void heapSort(ArrayList<Integer> arr, ProgressBar pb) {
         int N = arr.size();
 
         // Build heap (rearrange array)
@@ -151,7 +151,7 @@ public class SortingAlgorithmsArrayList {
 
     // To heapify a subtree rooted with node i which is
     // an index in arr[]. n is size of heap
-    void heapify(ArrayList<Integer> arr, int N, int i)
+    public static void heapify(ArrayList<Integer> arr, int N, int i)
     {
         int largest = i; // Initialize largest as root
         int l = 2 * i + 1; // left = 2*i + 1
