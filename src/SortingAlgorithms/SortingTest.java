@@ -17,47 +17,9 @@ public class SortingTest {
     ArrayList<Integer> arr;
     boolean seq;
 
+    String[] algorithmsNames = {"Bubble Sort", "Insertion Sort", "Quick Sort", "Heap Sort"};
+
     ProgressBar[] progressThreads = new ProgressBar[4];
-
-
-    // VEC THREADS
-
-    /*
-    public Thread bubbleVecThread = new Thread(() -> {
-
-    });
-
-    public Thread insertionVecThread = new Thread(() -> {
-
-    });
-
-    public Thread quickVecThread = new Thread(() -> {
-
-    });
-
-    public Thread heapVecThread = new Thread(() -> {
-
-    });
-
-    // ARRAY THREADS
-
-    public Thread bubbleArrayThread = new Thread(() -> {
-
-    });
-
-    public Thread insertionArrayThread = new Thread(() -> {
-
-    });
-
-    public Thread quickArrayThread = new Thread(() -> {
-
-    });
-
-    public Thread heapArrayThread = new Thread(() -> {
-
-    });
-
-    */
 
     public SortingTest(boolean useVec, int n, boolean seq) {
 
@@ -85,9 +47,7 @@ public class SortingTest {
         *   la variable @seq, es para correr todos los algoritmos de manera secuencial, o para
         *   correrlos de manera paralela y comparar tiempos.
         *
-        *   TODO: El codigo actual solo esta para un solo algoritmo. acomodar para correrlos todos.
         *   TODO: Podria usar reflexivas para facilitar el proceso de asignacion de funciones
-        *   TODO: ACTUALIZAR EL HILO DE CADA ALGORITMO EN LA PARTE SEQUENCIAL, O REVISAR QUE PASA CON LA ACTUALIZACION DE LA BARRA
         *
         */
 
@@ -100,7 +60,7 @@ public class SortingTest {
                     while (!pb.isSortingComplete()) {
                         printProgressBar(pb.getProgress(), pb.getTotalSteps(), true);
                         try {
-                            Thread.sleep(200);
+                            Thread.sleep(100);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
@@ -108,6 +68,7 @@ public class SortingTest {
                     printProgressBar(pb.getTotalSteps(), pb.getTotalSteps(), false);
                 });
 
+                TerminalUtils.infoTrace("Progreso del algoritmo: " + algorithmsNames[i]);
                 launch(sortThread[i], progressBarThread);
             }
 
@@ -145,10 +106,13 @@ public class SortingTest {
             launchMultiple(sortThread, progressBarThread);
         }
 
+        // log times
+
+        // columns, arraylist
     }
 
     private Thread[] initializeThreads() {
-        Thread[] sortingThreads = new Thread[4]; // number of threads // <--------- CAMBIO
+        Thread[] sortingThreads = new Thread[4]; // number of threads
         if (vector) {
             sortingThreads[0] = new Thread(() -> {
                 SortingAlgorithmsVector.bubbleSort(this.vec.clone(), n, progressThreads[0]);
@@ -168,19 +132,19 @@ public class SortingTest {
 
         } else {
             sortingThreads[0] = new Thread(() -> {
-                SortingAlgorithmsArrayList.bubbleSort(generateArrayList(n), n, progressThreads[0]);
+                SortingAlgorithmsArrayList.bubbleSort((ArrayList<Integer>) this.arr.clone(), n, progressThreads[0]);
             });
 
             sortingThreads[1] = new Thread(() -> {
-                SortingAlgorithmsArrayList.insertionSort(generateArrayList(n), progressThreads[1]);
+                SortingAlgorithmsArrayList.insertionSort((ArrayList<Integer>) this.arr.clone(), n, progressThreads[1]);
             });
 
             sortingThreads[2] = new Thread(() -> {
-                SortingAlgorithmsArrayList.quickSort(generateArrayList(n), n, progressThreads[2]);
+                SortingAlgorithmsArrayList.quickSort((ArrayList<Integer>) this.arr.clone(), n, progressThreads[2]);
             });
 
             sortingThreads[3] = new Thread(() -> {
-                SortingAlgorithmsArrayList.heapSort(generateArrayList(n), progressThreads[3]);
+                SortingAlgorithmsArrayList.heapSort((ArrayList<Integer>) this.arr.clone(), progressThreads[3]);
             });
         }
         return sortingThreads;
@@ -188,8 +152,8 @@ public class SortingTest {
 
     private void launch(Thread sortingThread, Thread progressBarThread) throws InterruptedException {
         // start time
-        long start = System.currentTimeMillis();
 
+        long start = System.nanoTime();
         // Threads
         sortingThread.start();
         progressBarThread.start();
@@ -197,16 +161,16 @@ public class SortingTest {
         progressBarThread.join();
 
         // time end and final time
-        long end = System.currentTimeMillis();
-        float time = (float) ((end - start));
+        long end = System.nanoTime();
+        float time = (float) ((end - start)/Math.pow(10,9));
 
         System.out.println();
-        TerminalUtils.infoTrace("Fueron " + time + " millisegundos.");
+        TerminalUtils.infoTrace("Fueron " + time + " segundos.\n");
     }
 
     private void launchMultiple(Thread[] sortingThreads, Thread progressBarThread) throws InterruptedException {
         // start time
-        long start = System.currentTimeMillis();
+        long start = System.nanoTime();
 
         // Threads
         for (Thread st : sortingThreads) {
@@ -220,11 +184,11 @@ public class SortingTest {
         progressBarThread.join();
 
         // time end and final time
-        long end = System.currentTimeMillis();
-        float time = (float) ((end - start));
+        long end = System.nanoTime();
+        float time = (float) ((end - start)/Math.pow(10,9));
 
         System.out.println();
-        TerminalUtils.infoTrace("Fueron " + time + " millisegundos.");
+        TerminalUtils.infoTrace("Fueron " + time + " segundos.\n");
     }
 
     // util;

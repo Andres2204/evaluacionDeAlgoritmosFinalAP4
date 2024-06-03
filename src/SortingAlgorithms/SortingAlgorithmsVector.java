@@ -17,7 +17,7 @@ public class SortingAlgorithmsVector {
                     swapped = true;
                 }
             }
-            pb.updateProgress(i + 1, n); // update progress 
+            pb.updateProgress(i + 1, n); // update
             if (!swapped) break;
         }
         pb.setSortingComplete(true); 
